@@ -17,8 +17,7 @@ import (
 )
 
 var (
-	errFailedWrite = errors.New("failed to read from wasm memory")
-	errFailedRead  = errors.New("failed to read from wasm memory")
+	errFailedRead = errors.New("failed to read from wasm memory")
 )
 
 //go:embed wasm/libinjection.so
@@ -182,12 +181,6 @@ func (m *sharedMemory) read(abi *libinjectionABI, ptr uintptr, size int) []byte 
 		panic(errFailedRead)
 	}
 	return buf
-}
-
-func (m *sharedMemory) write(abi *libinjectionABI, b []byte) uintptr {
-	ptr := m.allocate(uint32(len(b)))
-	abi.wasmMemory.Write(uint32(ptr), b)
-	return ptr
 }
 
 func (m *sharedMemory) writeString(abi *libinjectionABI, s string) uintptr {
