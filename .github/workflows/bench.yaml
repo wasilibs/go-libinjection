@@ -36,11 +36,11 @@ jobs:
 
       - run: go run mage.go benchall
         env:
-          LD_LIBRARY_PATH: ${{ startsWith(matrix.os, 'ubuntu-') && matrix.mode == 'cgo' && '/usr/local/lib' || '' }}
+          LD_LIBRARY_PATH: /usr/local/lib
 
       - run: go run mage.go wafbenchall
         env:
-          LD_LIBRARY_PATH: ${{ startsWith(matrix.os, 'ubuntu-') && matrix.mode == 'cgo' && '/usr/local/lib' || '' }}
+          LD_LIBRARY_PATH: /usr/local/lib
 
       - uses: actions/upload-artifact@v3
         with:
