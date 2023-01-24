@@ -1,0 +1,40 @@
+name: Benchmark
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.txt'
+      - '**/*.yaml'
+  workflow_dispatch:
+
+jobs:
+  bench:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
+        with:
+          go-version: '^1.18.8'
+          cache: true
+
+      - name: setup libinjection for cgo
+        run: |
+          wget https://github.com/libinjection/libinjection/archive/4d66612db53594df5fda4e1ee8a382f32109644d.tar.gz
+          tar -xf 4d66612db53594df5fda4e1ee8a382f32109644d.tar.gz
+          cd libinjection-4d66612db53594df5fda4e1ee8a382f32109644d
+          ./autogen.sh
+          ./configure
+          make
+          sudo make install
+        working-directory: /tmp
+
+      - run: go run mage.go benchall
+
+      - run: go run mage.go wafbenchall
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: results
+          path: build/*bench*.txt
