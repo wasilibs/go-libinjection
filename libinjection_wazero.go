@@ -60,6 +60,10 @@ func IsSQLi(input string) (bool, string) {
 		panic(err)
 	}
 
+	if res[0] == 0 {
+		return false, ""
+	}
+
 	fpBuf := abi.memory.read(abi, fpPtr, 9)
 	nullIdx := bytes.IndexByte(fpBuf, 0)
 	if nullIdx == -1 {
@@ -67,7 +71,7 @@ func IsSQLi(input string) (bool, string) {
 	}
 	fp := string(fpBuf[:nullIdx])
 
-	return res[0] == 1, fp
+	return true, fp
 }
 
 func IsXSS(input string) bool {
