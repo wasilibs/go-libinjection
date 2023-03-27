@@ -7,18 +7,14 @@ import (
 	"context"
 	_ "embed"
 	"errors"
-	"strconv"
 	"sync"
-	"sync/atomic"
 
 	"github.com/tetratelabs/wazero"
 	"github.com/tetratelabs/wazero/api"
 	"github.com/tetratelabs/wazero/imports/wasi_snapshot_preview1"
 )
 
-var (
-	errFailedRead = errors.New("failed to read from wasm memory")
-)
+var errFailedRead = errors.New("failed to read from wasm memory")
 
 //go:embed wasm/libinjection.so
 var libinjection []byte
@@ -93,31 +89,27 @@ func IsXSS(input string) bool {
 	return res[0] == 1
 }
 
-var (
-	moduleIdx = uint64(0)
-	abiPool   = sync.Pool{
-		New: func() interface{} {
-			ctx := context.Background()
-			modIdx := atomic.AddUint64(&moduleIdx, 1)
-			mod, err := wasmRT.InstantiateModule(ctx, wasmCompiled, wazero.NewModuleConfig().WithName(strconv.FormatUint(modIdx, 10)))
-			if err != nil {
-				panic(err)
-			}
+var abiPool = sync.Pool{
+	New: func() interface{} {
+		ctx := context.Background()
+		mod, err := wasmRT.InstantiateModule(ctx, wasmCompiled, wazero.NewModuleConfig().WithName(""))
+		if err != nil {
+			panic(err)
+		}
 
-			abi := &libinjectionABI{
-				libinjectionSQLi: mod.ExportedFunction("libinjection_sqli"),
-				libinjectionXSS:  mod.ExportedFunction("libinjection_xss"),
-				malloc:           mod.ExportedFunction("malloc"),
-				free:             mod.ExportedFunction("free"),
+		abi := &libinjectionABI{
+			libinjectionSQLi: mod.ExportedFunction("libinjection_sqli"),
+			libinjectionXSS:  mod.ExportedFunction("libinjection_xss"),
+			malloc:           mod.ExportedFunction("malloc"),
+			free:             mod.ExportedFunction("free"),
 
-				wasmMemory: mod.Memory(),
-				mod:        mod,
-			}
+			wasmMemory: mod.Memory(),
+			mod:        mod,
+		}
 
-			return abi
-		},
-	}
-)
+		return abi
+	},
+}
 
 type libinjectionABI struct {
 	libinjectionSQLi api.Function
