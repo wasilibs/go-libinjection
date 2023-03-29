@@ -1,16 +1,19 @@
 # Copyright 2022 The OWASP Coraza contributors
 # SPDX-License-Identifier: Apache-2.0
 
-FROM ghcr.io/corazawaf/coraza-proxy-wasm/buildtools-wasi-sdk:main
+FROM ghcr.io/webassembly/wasi-sdk:wasi-sdk-19
 
-RUN apt-get install -y autogen autoconf automake libtool binaryen
+ENV CFLAGS -O3 ${CFLAGS}
+ENV CXXFLAGS -fno-exceptions -O3 ${CXXFLAGS}
 
-RUN mkdir -p /libinjection && curl -L https://github.com/libinjection/libinjection/archive/4d66612db53594df5fda4e1ee8a382f32109644d.tar.gz | tar -xz --strip-components 1 -C /libinjection
+RUN apt-get update && apt-get install -y autogen autoconf automake libtool binaryen curl
+
+RUN mkdir -p /libinjection && curl -L https://github.com/libinjection/libinjection/archive/7e4b74e824dc3f0623ba4894df2a0d817351ec39.tar.gz | tar -xz --strip-components 1 -C /libinjection
 WORKDIR /libinjection
 RUN ./autogen.sh && \
     # host is required by configure but not used so set it arbitrarily
     ./configure --host=i686-pc-linux-gnu --enable-shared=false && \
-    make
+    make -C src libinjection.la
 
 # Separate step so exports can be updated without recompiling.
 # Number of layers isn't really a concern for this image.
