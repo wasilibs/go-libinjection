@@ -1,7 +1,7 @@
 # Copyright 2022 The OWASP Coraza contributors
 # SPDX-License-Identifier: Apache-2.0
 
-FROM ghcr.io/webassembly/wasi-sdk:wasi-sdk-19
+FROM ghcr.io/webassembly/wasi-sdk:wasi-sdk-20
 
 ENV CFLAGS -O3 ${CFLAGS}
 ENV CXXFLAGS -fno-exceptions -O3 ${CXXFLAGS}
