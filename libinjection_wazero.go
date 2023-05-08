@@ -154,20 +154,21 @@ func (m *sharedMemory) reserve(abi *libinjectionABI, size uint32) {
 	}
 
 	ctx := context.Background()
+	callStack := abi.callStack
 	if m.bufPtr != 0 {
-		_, err := abi.free.Call(ctx, uint64(m.bufPtr))
-		if err != nil {
+		callStack[0] = uint64(m.bufPtr)
+		if err := abi.free.CallWithStack(ctx, callStack); err != nil {
 			panic(err)
 		}
 	}
 
-	res, err := abi.malloc.Call(ctx, uint64(size))
-	if err != nil {
+	callStack[0] = uint64(size)
+	if err := abi.malloc.CallWithStack(ctx, callStack); err != nil {
 		panic(err)
 	}
 
 	m.size = size
-	m.bufPtr = uint32(res[0])
+	m.bufPtr = uint32(callStack[0])
 }
 
 func (m *sharedMemory) allocate(size uint32) uintptr {
