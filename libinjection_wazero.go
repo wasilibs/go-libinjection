@@ -51,12 +51,15 @@ func IsSQLi(input string) (bool, string) {
 	sPtr := abi.memory.writeString(abi, input)
 	fpPtr := abi.memory.allocate(9)
 
-	res, err := abi.libinjectionSQLi.Call(context.Background(), uint64(sPtr), uint64(len(input)), uint64(fpPtr))
-	if err != nil {
+	callStack := abi.callStack
+	callStack[0] = uint64(sPtr)
+	callStack[1] = uint64(len(input))
+	callStack[2] = uint64(fpPtr)
+	if err := abi.libinjectionSQLi.CallWithStack(context.Background(), callStack); err != nil {
 		panic(err)
 	}
 
-	if res[0] == 0 {
+	if callStack[0] == 0 {
 		return false, ""
 	}
 
@@ -81,12 +84,14 @@ func IsXSS(input string) bool {
 	defer abi.endOperation()
 	sPtr := abi.memory.writeString(abi, input)
 
-	res, err := abi.libinjectionXSS.Call(context.Background(), uint64(sPtr), uint64(len(input)))
-	if err != nil {
+	callStack := abi.callStack
+	callStack[0] = uint64(sPtr)
+	callStack[1] = uint64(len(input))
+	if err := abi.libinjectionXSS.CallWithStack(context.Background(), callStack); err != nil {
 		panic(err)
 	}
 
-	return res[0] == 1
+	return callStack[0] == 1
 }
 
 var abiPool = sync.Pool{
@@ -97,6 +102,8 @@ var abiPool = sync.Pool{
 			panic(err)
 		}
 
+		callStack := make([]uint64, 3)
+
 		abi := &libinjectionABI{
 			libinjectionSQLi: mod.ExportedFunction("libinjection_sqli"),
 			libinjectionXSS:  mod.ExportedFunction("libinjection_xss"),
@@ -105,6 +112,7 @@ var abiPool = sync.Pool{
 
 			wasmMemory: mod.Memory(),
 			mod:        mod,
+			callStack:  callStack,
 		}
 
 		return abi
@@ -120,7 +128,8 @@ type libinjectionABI struct {
 
 	wasmMemory api.Memory
 
-	mod api.Module
+	mod       api.Module
+	callStack []uint64
 
 	memory sharedMemory
 }
