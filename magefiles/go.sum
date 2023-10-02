@@ -1,2 +1,4 @@
-github.com/magefile/mage v1.14.0 h1:6QDX3g6z1YvJ4olPhT1wksUcSa/V0a1B+pJb73fBjyo=
-github.com/magefile/mage v1.14.0/go.mod h1:z5UZb/iS3GoOSn0JgWuiw7dxlurVYTu+/jHXqQg881A=
+github.com/magefile/mage v1.15.1-0.20230912152418-9f54e0f83e2a h1:tdPcGgyiH0K+SbsJBBm2oPyEIOTAvLBwD9TuUwVtZho=
+github.com/magefile/mage v1.15.1-0.20230912152418-9f54e0f83e2a/go.mod h1:z5UZb/iS3GoOSn0JgWuiw7dxlurVYTu+/jHXqQg881A=
+github.com/wasilibs/magefiles v0.0.0-20231002013040-f8ae2f82b096 h1:wedbJQTECDA0W/44E/smX4DBlsEe6apEQIAwvIC6038=
+github.com/wasilibs/magefiles v0.0.0-20231002013040-f8ae2f82b096/go.mod h1:2jI0++B3L61weT+Bs5OYJ+yDT3BlU1nLqfonbe78Glc=
