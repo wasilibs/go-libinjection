@@ -1,6 +1,6 @@
 module github.com/wasilibs/go-libinjection
 
-go 1.19
+go 1.20
 
 require (
 	github.com/corazawaf/libinjection-go v0.1.2
