@@ -1,8 +1,6 @@
 module github.com/wasilibs/go-libinjection/magefiles
 
-go 1.21
-
-toolchain go1.22.2
+go 1.20
 
 require (
 	github.com/aymanbagabas/go-osc52 v1.0.3 // indirect
