@@ -30,7 +30,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
-          go-version: '^1.20'
+          go-version: '^1.25'
 
       - name: setup autotools for cgo
         if: ${{ matrix.mode == 'cgo' && startsWith(matrix.os, 'macos-') }}
@@ -52,10 +52,10 @@ jobs:
         if: ${{ matrix.mode == 'tinygo' }}
         uses: acifani/setup-tinygo@v1
         with:
-          tinygo-version: 0.31.2
+          tinygo-version: 0.41.1
       - name: setup wasmtime for tinygo
         if: ${{ matrix.mode == 'tinygo' }}
-        run: go install github.com/wasilibs/tools/cmd/wasmtime@875fe73f677c58d467ee373a9e00e6cb66b268f3
+        run: go install github.com/wasilibs/tools/cmd/wasmtime@13e21a5960c7f51cd8c92da5cf35774d3207ee38
 
       - run: go run mage.go check
         env:
