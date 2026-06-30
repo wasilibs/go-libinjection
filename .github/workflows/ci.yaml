@@ -19,12 +19,12 @@ jobs:
           - tinygo
           - wazero
         os:
-          - macos-13
           - macos-14
-          - ubuntu-22.04
-          - windows-2022
+          - macos-15
+          - ubuntu-24.04
+          - windows-2025
         exclude:
-          - os: windows-2022
+          - os: windows-2025
             mode: cgo
     steps:
       - uses: actions/checkout@v4
@@ -67,7 +67,7 @@ jobs:
   # but not build without a C toolchain available, e.g. if C source files are checked into the repo
   # without a build tag to exclude them from pure-Go builds.
   docker-build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     container:
       image: golang:alpine
     steps:

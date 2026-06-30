@@ -4,7 +4,6 @@ package libinjection
 
 import (
 	"bytes"
-	"reflect"
 	"runtime"
 	"unsafe"
 
@@ -16,11 +15,9 @@ func IsSQLi(input string) (bool, string) {
 		return false, ""
 	}
 
-	inputSh := (*reflect.StringHeader)(unsafe.Pointer(&input))
-
 	fp := [9]byte{}
 
-	res := cinjection.IsSQLi(unsafe.Pointer(inputSh.Data), int(inputSh.Len), unsafe.Pointer(&fp[0]))
+	res := cinjection.IsSQLi(unsafe.Pointer(unsafe.StringData(input)), len(input), unsafe.Pointer(&fp[0]))
 	runtime.KeepAlive(input)
 
 	nullIdx := bytes.IndexByte(fp[:], 0)
@@ -36,9 +33,7 @@ func IsXSS(input string) bool {
 		return false
 	}
 
-	inputSh := (*reflect.StringHeader)(unsafe.Pointer(&input))
-
-	res := cinjection.IsXSS(unsafe.Pointer(inputSh.Data), int(inputSh.Len))
+	res := cinjection.IsXSS(unsafe.Pointer(unsafe.StringData(input)), len(input))
 
 	runtime.KeepAlive(input)
 	return res
