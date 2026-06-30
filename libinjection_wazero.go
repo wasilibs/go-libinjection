@@ -91,7 +91,9 @@ func IsXSS(input string) bool {
 		panic(err)
 	}
 
-	return callStack[0] == 1
+	// As per https://github.com/libinjection/libinjection/blob/main/MIGRATION.md#strategy-2-minimal-migration-quick-fix
+	// Any returned value != LIBINJECTION_RESULT_FALSE (0) is either an injection or an error. Fail-safe approach: treat errors as detections.
+	return callStack[0] != 0
 }
 
 var abiPool = sync.Pool{

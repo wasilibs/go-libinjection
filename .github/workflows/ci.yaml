@@ -39,9 +39,9 @@ jobs:
       - name: setup libinjection for cgo
         if: ${{ matrix.mode == 'cgo' }}
         run: |
-          wget https://github.com/libinjection/libinjection/archive/4d66612db53594df5fda4e1ee8a382f32109644d.tar.gz
-          tar -xf 4d66612db53594df5fda4e1ee8a382f32109644d.tar.gz
-          cd libinjection-4d66612db53594df5fda4e1ee8a382f32109644d
+          wget https://github.com/libinjection/libinjection/archive/211782219663f889f471650150df12b623c5766e.tar.gz
+          tar -xf 211782219663f889f471650150df12b623c5766e.tar.gz
+          cd libinjection-211782219663f889f471650150df12b623c5766e
           ./autogen.sh
           ./configure
           make
