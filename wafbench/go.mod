@@ -1,6 +1,6 @@
 module github.com/wasilibs/go-libinjection/wafbench
 
-go 1.20
+go 1.25.0
 
 require (
 	github.com/bmatcuk/doublestar/v4 v4.4.0

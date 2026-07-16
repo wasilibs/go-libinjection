@@ -19,18 +19,18 @@ jobs:
           - tinygo
           - wazero
         os:
-          - macos-13
           - macos-14
-          - ubuntu-22.04
-          - windows-2022
+          - macos-15
+          - ubuntu-24.04
+          - windows-2025
         exclude:
-          - os: windows-2022
+          - os: windows-2025
             mode: cgo
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
-          go-version: '^1.20'
+          go-version: '^1.25'
 
       - name: setup autotools for cgo
         if: ${{ matrix.mode == 'cgo' && startsWith(matrix.os, 'macos-') }}
@@ -39,9 +39,9 @@ jobs:
       - name: setup libinjection for cgo
         if: ${{ matrix.mode == 'cgo' }}
         run: |
-          wget https://github.com/libinjection/libinjection/archive/4d66612db53594df5fda4e1ee8a382f32109644d.tar.gz
-          tar -xf 4d66612db53594df5fda4e1ee8a382f32109644d.tar.gz
-          cd libinjection-4d66612db53594df5fda4e1ee8a382f32109644d
+          wget https://github.com/libinjection/libinjection/archive/211782219663f889f471650150df12b623c5766e.tar.gz
+          tar -xf 211782219663f889f471650150df12b623c5766e.tar.gz
+          cd libinjection-211782219663f889f471650150df12b623c5766e
           ./autogen.sh
           ./configure
           make
@@ -52,10 +52,10 @@ jobs:
         if: ${{ matrix.mode == 'tinygo' }}
         uses: acifani/setup-tinygo@v1
         with:
-          tinygo-version: 0.31.2
+          tinygo-version: 0.41.1
       - name: setup wasmtime for tinygo
         if: ${{ matrix.mode == 'tinygo' }}
-        run: go install github.com/wasilibs/tools/cmd/wasmtime@875fe73f677c58d467ee373a9e00e6cb66b268f3
+        run: go install github.com/wasilibs/tools/cmd/wasmtime@13e21a5960c7f51cd8c92da5cf35774d3207ee38
 
       - run: go run mage.go check
         env:
@@ -67,7 +67,7 @@ jobs:
   # but not build without a C toolchain available, e.g. if C source files are checked into the repo
   # without a build tag to exclude them from pure-Go builds.
   docker-build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     container:
       image: golang:alpine
     steps:

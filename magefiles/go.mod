@@ -1,6 +1,6 @@
 module github.com/wasilibs/go-libinjection/magefiles
 
-go 1.20
+go 1.25.0
 
 require (
 	github.com/aymanbagabas/go-osc52 v1.0.3 // indirect
@@ -25,4 +25,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-require github.com/wasilibs/magefiles v0.0.0-20240202004439-abe7b5473f12
+require github.com/wasilibs/magefiles v0.0.0-20250219051227-1485a49a5a46

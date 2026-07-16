@@ -8,7 +8,7 @@ ENV LDFLAGS $CFLAGS -mexec-model=reactor
 
 RUN apt-get update && apt-get install -y autogen autoconf automake libtool binaryen curl
 
-RUN mkdir -p /libinjection && curl -L https://github.com/libinjection/libinjection/archive/4aa3894b21d03d9d8fc364505c0617d2aca73fc1.tar.gz | tar -xz --strip-components 1 -C /libinjection
+RUN mkdir -p /libinjection && curl -L https://github.com/libinjection/libinjection/archive/211782219663f889f471650150df12b623c5766e.tar.gz | tar -xz --strip-components 1 -C /libinjection
 WORKDIR /libinjection
 RUN ./autogen.sh && \
     # host is required by configure but not used so set it arbitrarily
