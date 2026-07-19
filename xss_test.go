@@ -39,7 +39,7 @@ func TestIsXSS(t *testing.T) {
 func BenchmarkIsXSS(b *testing.B) {
 	for _, example := range xssExamples {
 		b.Run(example, func(b *testing.B) {
-			for i := 0; i < b.N; i++ {
+			for range b.N {
 				if !IsXSSBenchmark(example) {
 					b.Errorf("[%s] is not XSS", example)
 				}

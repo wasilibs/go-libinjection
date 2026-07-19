@@ -4,26 +4,24 @@ on:
     branches:
       - main
     paths-ignore:
-      - '**/*.md'
-      - '**/*.txt'
-      - '**/*.yaml'
+      - "**/*.md"
+      - "**/*.txt"
+      - "**/*.yaml"
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   bench:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
-        with:
-          go-version: '^1.20'
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: curioswitch/go-build/.github/actions/setup-go@a2e54f5c6b6cff10d3b5ac6fcba4de7a411c6736 # v0.8.1
 
-      - name: setup autotools for cgo
-        if: ${{ matrix.mode == 'cgo' && startsWith(matrix.os, 'macos-') }}
-        run: brew install autoconf automake libtool
-
+      # Needed for the cgo benchmark mode run by bench-all / wafbench-all.
       - name: setup libinjection for cgo
-        run: |
+        run: |-
           wget https://github.com/libinjection/libinjection/archive/211782219663f889f471650150df12b623c5766e.tar.gz
           tar -xf 211782219663f889f471650150df12b623c5766e.tar.gz
           cd libinjection-211782219663f889f471650150df12b623c5766e
@@ -33,15 +31,15 @@ jobs:
           sudo make install
         working-directory: /tmp
 
-      - run: go run mage.go benchall
+      - run: go run ./build bench-all
         env:
           LD_LIBRARY_PATH: /usr/local/lib
 
-      - run: go run mage.go wafbenchall
+      - run: go run ./build wafbench-all
         env:
           LD_LIBRARY_PATH: /usr/local/lib
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: results
-          path: build/*bench*.txt
+          path: out/*bench*.txt

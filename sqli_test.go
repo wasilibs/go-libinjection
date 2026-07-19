@@ -12,10 +12,10 @@ import (
 	"testing"
 )
 
-func TestIsSQLi(t *testing.T) {
+func TestIsSQLi(_ *testing.T) {
 	result, fingerprint := IsSQLi("-1' and 1=1 union/* foo */select load_file('/etc/passwd')--")
 	fmt.Println("=========result==========: ", result)
-	fmt.Println("=======fingerprint=======: ", string(fingerprint))
+	fmt.Println("=======fingerprint=======: ", fingerprint)
 }
 
 type sqliTest struct {
@@ -24,12 +24,12 @@ type sqliTest struct {
 	fingerprint string
 }
 
-func readTestData(t testing.TB, filename string) sqliTest {
-	t.Helper()
+func readTestData(tb testing.TB, filename string) sqliTest {
+	tb.Helper()
 
 	f, err := os.Open(filename)
 	if err != nil {
-		t.Fatal(err)
+		tb.Fatal(err)
 	}
 	defer f.Close()
 
@@ -75,7 +75,7 @@ func TestSQLiDriver(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	var tests []sqliTest
+	tests := make([]sqliTest, 0, len(files))
 	for _, file := range files {
 		tests = append(tests, readTestData(t, file))
 	}
@@ -100,7 +100,7 @@ func BenchmarkSQLiDriver(b *testing.B) {
 		b.Fatal(err)
 	}
 
-	var tests []sqliTest
+	tests := make([]sqliTest, 0, len(files))
 	for _, file := range files {
 		tests = append(tests, readTestData(b, file))
 	}
@@ -108,7 +108,7 @@ func BenchmarkSQLiDriver(b *testing.B) {
 	for _, tc := range tests {
 		tt := tc
 		b.Run(tt.name, func(b *testing.B) {
-			for i := 0; i < b.N; i++ {
+			for range b.N {
 				res, _ := IsSQLiBenchmark(tt.input)
 				if len(tt.fingerprint) == 0 && res {
 					b.Errorf("expected not sql injection but was injection")

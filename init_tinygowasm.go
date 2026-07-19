@@ -3,6 +3,6 @@
 package libinjection
 
 /*
-#cgo LDFLAGS: -Lwasm -linjection
+#cgo LDFLAGS: -Linternal/wasm -linjection
 */
 import "C"
