@@ -6,6 +6,8 @@ on:
     - cron: "5 12 * * 1"
   workflow_dispatch:
 
+permissions: {}
+
 jobs:
   renovate:
     uses: curioswitch/go-build/.github/workflows/export-renovate.yaml@a2e54f5c6b6cff10d3b5ac6fcba4de7a411c6736 # v0.8.1
