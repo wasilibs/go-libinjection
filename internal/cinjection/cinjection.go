@@ -5,6 +5,7 @@ package cinjection
 /*
 int libinjection_sqli(void* s, int len, void* fp);
 int libinjection_xss(void* s, int len);
+// Prototypes for the libinjection functions linked from the wasm module (tinygo) or C library (cgo).
 */
 import "C"
 

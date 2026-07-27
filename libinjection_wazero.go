@@ -16,7 +16,7 @@ import (
 
 var errFailedRead = errors.New("failed to read from wasm memory")
 
-//go:embed wasm/libinjection.so
+//go:embed internal/wasm/libinjection.so
 var libinjection []byte
 
 var (
@@ -43,7 +43,7 @@ func IsSQLi(input string) (bool, string) {
 	if len(input) == 0 {
 		return false, ""
 	}
-	abi := abiPool.Get().(*libinjectionABI)
+	abi, _ := abiPool.Get().(*libinjectionABI)
 	defer abiPool.Put(abi)
 
 	abi.startOperation(len(input) + 9)
@@ -77,7 +77,7 @@ func IsXSS(input string) bool {
 	if len(input) == 0 {
 		return false
 	}
-	abi := abiPool.Get().(*libinjectionABI)
+	abi, _ := abiPool.Get().(*libinjectionABI)
 	defer abiPool.Put(abi)
 
 	abi.startOperation(len(input))

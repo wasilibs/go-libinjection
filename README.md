@@ -3,26 +3,26 @@
 go-libinjection is a library for libinjection which wraps the C [libinjection][2] library.
 It provides the same API as [libinjection-go][1] and is a drop-in replacement with full
 API and behavior compatibility. By default, libinjection is packaged as a WebAssembly module and accessed
-with the pure Go runtime,  [wazero][3]. This means that it is compatible with any Go application, regardless
+with the pure Go runtime, [wazero][3]. This means that it is compatible with any Go application, regardless
 of availability of cgo.
 
-For TinyGo applications being built for WASM, this library will perform significantly better. For Go applications,
-it seems to be slower for SQL injection and faster for XSS. The API is a drop-in replacement, so it
-is best to try it and benchmark to see the effect. It is likely that in the future, libinjection-go will
-improve to have competitive XSS detection and this library will be relevant only to TinyGo or
-case studies of wrapping vs rewriting libraries.
+For TinyGo applications being built for WASM, this library will perform significantly better. For
+Go applications, it seems to be slower for SQL injection and faster for XSS. The API is a drop-in
+replacement, so it is best to try it and benchmark to see the effect. It is likely that in the
+future, libinjection-go will improve to have competitive XSS detection and this library will be
+relevant only to TinyGo or case studies of wrapping vs rewriting libraries.
 
 ## Usage
 
-go-libinjection is a standard Go library package and can be added to a go.mod file. It will work fine in
-Go or TinyGo projects.
+go-libinjection is a standard Go library package and can be added to a go.mod file. It will work
+fine in Go or TinyGo projects.
 
-```
+```text
 go get github.com/wasilibs/go-libinjection
 ```
 
-Because the library is a drop-in replacement for [petar-dambovaliev/libinjection][1], an import rewrite can
-make migrating code to use it simple.
+Because the library is a drop-in replacement for [petar-dambovaliev/libinjection][1], an import
+rewrite can make migrating code to use it simple.
 
 ```go
 import "github.com/corazawaf/libinjection-go"
@@ -38,7 +38,7 @@ import "github.com/wasilibs/go-libinjection"
 
 This library also supports opting into using cgo to wrap [libinjection][2] instead
 of using WebAssembly. This requires having a built version of the library available -
-`pkg-config` will be used to locate the library. The build tag `aho_corasick_cgo` can be used to
+`pkg-config` will be used to locate the library. The build tag `libinjection_cgo` can be used to
 enable cgo support.
 
 ## Performance
@@ -52,7 +52,7 @@ should still be somewhat, though not precisely, informative.
 Microbenchmarks are the same as included in libinjection-go. Full results can be
 viewed in the workflow, a sample of results for one run looks like this
 
-```
+```text
 SQLiDriver/tests/test-sqli-001.txt-2                         1.27µs ± 0%      5.40µs ± 0%          2.13µs ± 2%
 SQLiDriver/tests/test-sqli-002.txt-2                          838ns ± 0%      3409ns ± 1%          1441ns ± 1%
 SQLiDriver/tests/test-sqli-012.txt-2                          508ns ± 1%      2039ns ± 0%           885ns ± 0%
@@ -82,7 +82,8 @@ IsXSS/<a_href="__javascript:alert(1);"_>-2                   2.14µs ± 0%      
 IsXSS/<a_href="JAVASCRIPT:alert(1);"_>-2                     2.09µs ± 0%      0.78µs ± 1%          0.37µs ± 0%
 ```
 
-The library seems to consistently perform 4x slower for SQL injection, with one odd case, and 2x faster for XSS.
+The library seems to consistently perform 4x slower for SQL injection, with one odd case, and 2x
+faster for XSS.
 
 ### wafbench
 
@@ -90,7 +91,7 @@ wafbench tests the performance of replacing the detect operators of the OWASP [C
 [Coraza][6] implementation with this library. This benchmark is considered a real world performance
 test, though the bulk of processing is in regex, not detection.\
 
-```
+```text
 WAF/FTW-2                          35.6s ± 0%          36.5s ± 1%              35.3s ± 0%
 WAF/POST/1-2                      4.13ms ± 2%         4.22ms ± 1%             4.10ms ± 1%
 WAF/POST/1000-2                   21.6ms ± 1%         22.1ms ± 3%             21.2ms ± 1%
