@@ -31,8 +31,8 @@ jobs:
           - os: windows-2025
             mode: cgo
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-      - uses: curioswitch/go-build/.github/actions/setup-go@a2e54f5c6b6cff10d3b5ac6fcba4de7a411c6736 # v0.8.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: curioswitch/go-build/.github/actions/setup-go@8cee71a440fb70ec08525081efdf8088d2b3618e # v0.8.3
 
       - name: setup autotools for cgo (mac)
         if: ${{ matrix.mode == 'cgo' && startsWith(matrix.os, 'macos-') }}
@@ -75,7 +75,7 @@ jobs:
     container:
       image: golang:alpine
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - run: if command -v gcc &> /dev/null; then echo "GCC found but not expected"; exit 2; fi
 
