@@ -3,10 +3,10 @@ module github.com/wasilibs/go-libinjection/wafbench
 go 1.25.0
 
 require (
-	github.com/bmatcuk/doublestar/v4 v4.4.0
-	github.com/corazawaf/coraza/v3 v3.0.0-20221129120302-63a49c8b1723
-	github.com/coreruleset/go-ftw v0.4.4
-	github.com/rs/zerolog v1.28.0
+	github.com/bmatcuk/doublestar/v4 v4.10.0
+	github.com/corazawaf/coraza/v3 v3.7.0
+	github.com/coreruleset/go-ftw/v2 v2.5.0
+	github.com/rs/zerolog v1.35.1
 	github.com/wasilibs/go-libinjection v0.0.0-00010101000000-000000000000
 )
 
