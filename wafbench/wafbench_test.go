@@ -38,7 +38,7 @@ func BenchmarkWAF(b *testing.B) {
 	defer s.Close()
 
 	b.Run("FTW", func(b *testing.B) {
-		for i := 0; i < b.N; i++ {
+		for b.Loop() {
 			runFTW(b, errorPath, s)
 		}
 	})
@@ -46,7 +46,7 @@ func BenchmarkWAF(b *testing.B) {
 	for _, size := range []int{1, 1000, 10000, 100000} {
 		payload := strings.Repeat("a", size)
 		b.Run(fmt.Sprintf("POST/%d", size), func(b *testing.B) {
-			for i := 0; i < b.N; i++ {
+			for b.Loop() {
 				_, err := http.Post(s.URL+"/anything", "text/plain", strings.NewReader(payload))
 				if err != nil {
 					b.Error(err)
