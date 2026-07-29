@@ -47,9 +47,12 @@ func BenchmarkWAF(b *testing.B) {
 		payload := strings.Repeat("a", size)
 		b.Run(fmt.Sprintf("POST/%d", size), func(b *testing.B) {
 			for b.Loop() {
-				_, err := http.Post(s.URL+"/anything", "text/plain", strings.NewReader(payload))
+				res, err := http.Post(s.URL+"/anything", "text/plain", strings.NewReader(payload))
 				if err != nil {
 					b.Error(err)
+				}
+				if res != nil {
+					res.Body.Close()
 				}
 			}
 		})
@@ -61,14 +64,14 @@ func runFTW(tb testing.TB, errorPath string, s *httptest.Server) {
 	tb.Helper()
 
 	var tests []*test.FTWTest
-	err := doublestar.GlobWalk(crstests.FS, "**/*.yaml", func(path string, d os.DirEntry) error {
+	err := doublestar.GlobWalk(crstests.FS, "**/*.yaml", func(path string, _ os.DirEntry) error {
 		yaml, err := fs.ReadFile(crstests.FS, path)
 		if err != nil {
-			return err
+			return fmt.Errorf("wafbench: read file during walk: %w", err)
 		}
 		t, err := test.GetTestFromYaml(yaml, path)
 		if err != nil {
-			return err
+			return fmt.Errorf("wafbench: parse test during walk: %w", err)
 		}
 		tests = append(tests, t)
 		return nil
