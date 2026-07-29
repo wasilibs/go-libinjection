@@ -66,20 +66,9 @@ jobs:
           LD_LIBRARY_PATH: ${{ startsWith(matrix.os, 'ubuntu-') && matrix.mode == 'cgo' && '/usr/local/lib' || '' }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  # The wafbench module is only exercised by the benchmark workflow, which runs after merge.
-  # go vet here so a dependency update cannot break it unnoticed.
-  wafbench:
-    runs-on: ubuntu-24.04
-    defaults:
-      run:
+      - name: run wafbench checks
+        run: go run ./build lint
         working-directory: wafbench
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: curioswitch/go-build/.github/actions/setup-go@8cee71a440fb70ec08525081efdf8088d2b3618e # v0.8.3
-
-      - run: GOWORK=off go mod tidy -diff
-      - run: GOWORK=off go vet ./...
-      - run: GOWORK=off go vet -tags libinjection_bench_default ./...
 
   # Runs tests using wazero inside a minimal golang docker image. This makes sure the code builds
   # even when there is no C toolchain available. It is possible for code to work fine with CGO_ENABLED=0
