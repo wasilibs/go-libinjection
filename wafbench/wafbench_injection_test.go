@@ -3,21 +3,21 @@
 package wafbench
 
 import (
-	"github.com/corazawaf/coraza/v3/operators"
-	"github.com/corazawaf/coraza/v3/rules"
+	"github.com/corazawaf/coraza/v3/experimental/plugins"
+	"github.com/corazawaf/coraza/v3/experimental/plugins/plugintypes"
 
 	"github.com/wasilibs/go-libinjection"
 )
 
 type detectSQLi struct{}
 
-var _ rules.Operator = (*detectSQLi)(nil)
+var _ plugintypes.Operator = (*detectSQLi)(nil)
 
-func newDetectSQLi(rules.OperatorOptions) (rules.Operator, error) {
+func newDetectSQLi(plugintypes.OperatorOptions) (plugintypes.Operator, error) {
 	return &detectSQLi{}, nil
 }
 
-func (o *detectSQLi) Evaluate(tx rules.TransactionState, value string) bool {
+func (o *detectSQLi) Evaluate(tx plugintypes.TransactionState, value string) bool {
 	res, fingerprint := libinjection.IsSQLi(value)
 	if !res {
 		return false
@@ -28,17 +28,17 @@ func (o *detectSQLi) Evaluate(tx rules.TransactionState, value string) bool {
 
 type detectXSS struct{}
 
-var _ rules.Operator = (*detectXSS)(nil)
+var _ plugintypes.Operator = (*detectXSS)(nil)
 
-func newDetectXSS(rules.OperatorOptions) (rules.Operator, error) {
+func newDetectXSS(plugintypes.OperatorOptions) (plugintypes.Operator, error) {
 	return &detectXSS{}, nil
 }
 
-func (o *detectXSS) Evaluate(_ rules.TransactionState, value string) bool {
+func (o *detectXSS) Evaluate(_ plugintypes.TransactionState, value string) bool {
 	return libinjection.IsXSS(value)
 }
 
 func init() {
-	operators.Register("detectSQLi", newDetectSQLi)
-	operators.Register("detectXSS", newDetectXSS)
+	plugins.RegisterOperator("detectSQLi", newDetectSQLi)
+	plugins.RegisterOperator("detectXSS", newDetectXSS)
 }
