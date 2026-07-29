@@ -65,7 +65,7 @@ jobs:
           LIBINJECTION_TEST_MODE: ${{ matrix.mode }}
           LD_LIBRARY_PATH: ${{ startsWith(matrix.os, 'ubuntu-') && matrix.mode == 'cgo' && '/usr/local/lib' || '' }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: run wafbench checks
         run: go run ./build lint
         working-directory: wafbench
