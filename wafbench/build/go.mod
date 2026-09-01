@@ -3,7 +3,7 @@ module github.com/wasilibs/go-libinjection/wafbench/build
 go 1.25.0
 
 require (
-	github.com/curioswitch/go-build v0.8.3
+	github.com/curioswitch/go-build v0.9.0
 	github.com/goyek/x v0.4.0
 )
 
