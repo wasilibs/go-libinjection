@@ -3,11 +3,11 @@ module github.com/wasilibs/go-libinjection/wafbench
 go 1.25.7
 
 require (
-	github.com/bmatcuk/doublestar/v4 v4.10.2
+	github.com/bmatcuk/doublestar/v4 v4.10.3
 	github.com/corazawaf/coraza-coreruleset/v4 v4.25.0
-	github.com/corazawaf/coraza/v3 v3.7.0
+	github.com/corazawaf/coraza/v3 v3.8.1
 	github.com/coreruleset/albedo v0.3.0
-	github.com/coreruleset/go-ftw/v2 v2.6.0
+	github.com/coreruleset/go-ftw/v2 v2.6.1
 	github.com/rs/zerolog v1.35.1
 	github.com/wasilibs/go-libinjection v0.0.0-00010101000000-000000000000
 )
@@ -17,12 +17,12 @@ require (
 	github.com/Masterminds/goutils v1.1.1 // indirect
 	github.com/Masterminds/semver/v3 v3.4.0 // indirect
 	github.com/Masterminds/sprig/v3 v3.3.0 // indirect
-	github.com/corazawaf/libinjection-go v0.3.3 // indirect
+	github.com/corazawaf/libinjection-go v0.3.5 // indirect
 	github.com/coreruleset/ftw-tests-schema/v2 v2.3.0 // indirect
 	github.com/fsnotify/fsnotify v1.9.0 // indirect
 	github.com/go-viper/mapstructure/v2 v2.4.0 // indirect
 	github.com/goccy/go-json v0.10.5 // indirect
-	github.com/goccy/go-yaml v1.18.0 // indirect
+	github.com/goccy/go-yaml v1.19.2 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gotnospirit/makeplural v0.0.0-20180622080156-a5f48d94d976 // indirect
 	github.com/gotnospirit/messageformat v0.0.0-20221001023931-dfe49f1eb092 // indirect
