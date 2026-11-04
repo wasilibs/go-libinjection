@@ -1,7 +1,7 @@
 # Copyright 2022 The OWASP Coraza contributors
 # SPDX-License-Identifier: Apache-2.0
 
-FROM ghcr.io/webassembly/wasi-sdk:wasi-sdk-20
+FROM ghcr.io/webassembly/wasi-sdk:wasi-sdk-34 AS wasm
 
 ENV CFLAGS -O3 ${CFLAGS}
 ENV LDFLAGS $CFLAGS -mexec-model=reactor
@@ -18,14 +18,22 @@ RUN ./autogen.sh \
 
 # Separate step so exports can be updated without recompiling.
 # Number of layers isn't really a concern for this image.
-# global-base=1024 same as emcc and allows further wasm-opt optimizations
-RUN $CXX -o src/.libs/libinjection-noopt.so -Wl,--global-base=1024 $LDFLAGS \
+# The linker places the stack at the start of memory by default so that stack
+# overflow traps instead of overwriting data.
+RUN $CXX -o src/.libs/libinjection-noopt.wasm $LDFLAGS \
   src/.libs/libinjection.a \
   -Wl,--export=malloc \
   -Wl,--export=free \
   -Wl,--export=libinjection_sqli \
   -Wl,--export=libinjection_xss
 
-RUN wasm-opt -o src/.libs/libinjection.so --low-memory-unused --flatten --rereloop --converge -O3 src/.libs/libinjection-noopt.so
+RUN wasm-opt -o src/.libs/libinjection.wasm --flatten --rereloop --converge -O3 src/.libs/libinjection-noopt.wasm
 
-CMD ["cp", "src/.libs/libinjection.a", "src/.libs/libinjection.so", "/out/"]
+FROM golang:1.27-trixie
+
+COPY --from=wasm /libinjection/src/.libs/libinjection.a /build/
+COPY --from=wasm /libinjection/src/.libs/libinjection.wasm /build/
+WORKDIR /build
+RUN go run github.com/ncruces/wasm2go@v0.4.20 -unsafe -pkg=wasm2go < libinjection.wasm > libinjection.wasm.go
+
+CMD ["cp", "/build/libinjection.a", "/build/libinjection.wasm.go", "/out/"]
