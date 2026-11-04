@@ -33,8 +33,6 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: curioswitch/go-build/.github/actions/setup-go@432d6c326402347b1f6ec5875fbdda8d0cedc54d # v0.10.0
-        with:
-          go-version: ${{ matrix.mode == 'tinygo' && '1.26' || null }}
 
       - name: setup autotools for cgo (mac)
         if: ${{ matrix.mode == 'cgo' && startsWith(matrix.os, 'macos-') }}
@@ -56,7 +54,7 @@ jobs:
         if: ${{ matrix.mode == 'tinygo' }}
         uses: acifani/setup-tinygo@f51bf108c9895381060398804ce6cf6f62692106 # v3.0.1
         with:
-          tinygo-version: 0.41.1
+          tinygo-version: 0.44.0
       - name: setup wasmtime for tinygo
         if: ${{ matrix.mode == 'tinygo' }}
         run: go install github.com/wasilibs/tools/cmd/wasmtime@13e21a5960c7f51cd8c92da5cf35774d3207ee38
@@ -67,7 +65,6 @@ jobs:
           LIBINJECTION_TEST_MODE: ${{ matrix.mode }}
           LD_LIBRARY_PATH: ${{ startsWith(matrix.os, 'ubuntu-') && matrix.mode == 'cgo' && '/usr/local/lib' || '' }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GOWORK: ${{ matrix.mode == 'tinygo' && 'off' || null }}
 
       - name: run wafbench checks
         run: go run ./build lint
