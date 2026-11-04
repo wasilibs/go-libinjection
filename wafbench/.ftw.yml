@@ -21,3 +21,5 @@ testoverride:
     "^922130-1$": 200003 (multipart strict error) matches at parsing time instead
     "^922130-2$": 200003 (multipart strict error) matches at parsing time instead
     "^922130-7$": 200003 (multipart strict error) matches at parsing time instead
+    # go-ftw refuses to send the request.
+    "^921140-1$": raw CR in a header value, rejected by go-ftw before sending
