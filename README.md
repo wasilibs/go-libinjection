@@ -2,8 +2,8 @@
 
 go-libinjection is a library for libinjection which wraps the C [libinjection][2] library.
 It provides the same API as [libinjection-go][1] and is a drop-in replacement with full
-API and behavior compatibility. By default, libinjection is packaged as a WebAssembly module and accessed
-with the pure Go runtime, [wazero][3]. This means that it is compatible with any Go application, regardless
+API and behavior compatibility. By default, libinjection is packaged as a WebAssembly module, then
+compiled to Go using [wasm2go][3]. This means that it is compatible with any Go application, regardless
 of availability of cgo.
 
 For TinyGo applications being built for WASM, this library will perform significantly better. For
@@ -104,7 +104,7 @@ especially at larger payload sizes. With cgo, performance is a little faster.
 
 [1]: https://github.com/corazawaf/libinjection-go
 [2]: https://github.com/libinjection/libinjection
-[3]: https://wazero.io
+[3]: https://github.com/ncruces/wasm2go
 [4]: https://github.com/wasilibs/go-libinjection/actions/workflows/bench.yaml
 [5]: https://github.com/coreruleset/coreruleset
 [6]: https://github.com/corazawaf/coraza

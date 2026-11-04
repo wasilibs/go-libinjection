@@ -2,9 +2,4 @@ module github.com/wasilibs/go-libinjection
 
 go 1.26.0
 
-require (
-	github.com/corazawaf/libinjection-go v0.3.5
-	github.com/tetratelabs/wazero v1.12.0
-)
-
-require golang.org/x/sys v0.49.0 // indirect
+require github.com/corazawaf/libinjection-go v0.3.5

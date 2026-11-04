@@ -23,10 +23,10 @@ func main() {
 
 	// Register a mode-aware test task before DefineTasks so it is wired into the
 	// test and check aggregates. The mode is selected with LIBINJECTION_TEST_MODE
-	// (wazero (default), cgo, tinygo) to match the CI matrix.
+	// (wasm2go (default), cgo, tinygo) to match the CI matrix.
 	build.RegisterTestTask(goyek.Define(goyek.Task{
 		Name:  "test-go",
-		Usage: "Runs Go tests. LIBINJECTION_TEST_MODE selects the mode (wazero, cgo, tinygo).",
+		Usage: "Runs Go tests. LIBINJECTION_TEST_MODE selects the mode (wasm2go, cgo, tinygo).",
 		Action: func(a *goyek.A) {
 			if testMode() == modeTinyGo {
 				cmd.Exec(a, fmt.Sprintf(`tinygo test -target=wasi -v -tags "%s" ./...`, strings.Join(tags, ",")))
@@ -68,7 +68,7 @@ func main() {
 type mode byte
 
 const (
-	modeWazero mode = iota
+	modeWasm2go mode = iota
 	modeCgo
 	modeTinyGo
 )
@@ -80,11 +80,11 @@ func testMode() mode {
 	case "tinygo":
 		return modeTinyGo
 	default:
-		return modeWazero
+		return modeWasm2go
 	}
 }
 
-// modeTags returns the build tags for the selected test mode. The wazero and
+// modeTags returns the build tags for the selected test mode. The wasm2go and
 // tinygo modes need no explicit tags (tinygo defines tinygo.wasm itself).
 func modeTags() []string {
 	if testMode() == modeCgo {
@@ -161,7 +161,7 @@ const verBenchstat = "v0.0.0-20230221235046-aebcfb61e84c"
 type benchMode int
 
 const (
-	benchModeWazero benchMode = iota
+	benchModeWasm2go benchMode = iota
 	benchModeCGO
 	benchModeDefault
 )
@@ -179,7 +179,7 @@ func benchArgs(count int, m benchMode) string {
 		args = append(args, "-tags=libinjection_cgo")
 	case benchModeDefault:
 		args = append(args, "-tags=libinjection_bench_default")
-	case benchModeWazero:
+	case benchModeWasm2go:
 	}
 	args = append(args, "./...")
 
@@ -196,9 +196,9 @@ func defineBenchTasks(name, dir string) {
 
 	goyek.Define(goyek.Task{
 		Name:  name,
-		Usage: "Runs " + name + " benchmarks in the default configuration, using wazero.",
+		Usage: "Runs " + name + " benchmarks in the default configuration, using wasm2go.",
 		Action: func(a *goyek.A) {
-			cmd.Exec(a, benchArgs(1, benchModeWazero), dirOpts...)
+			cmd.Exec(a, benchArgs(1, benchModeWasm2go), dirOpts...)
 		},
 	})
 
@@ -237,10 +237,10 @@ func defineBenchTasks(name, dir string) {
 			}
 
 			def := run(benchModeDefault, "_default")
-			wazero := run(benchModeWazero, "")
+			wasm2go := run(benchModeWasm2go, "")
 			cgo := run(benchModeCGO, "_cgo")
 
-			cmd.Exec(a, fmt.Sprintf("go run golang.org/x/perf/cmd/benchstat@%s %s %s %s", verBenchstat, def, wazero, cgo))
+			cmd.Exec(a, fmt.Sprintf("go run golang.org/x/perf/cmd/benchstat@%s %s %s %s", verBenchstat, def, wasm2go, cgo))
 		},
 	})
 }
