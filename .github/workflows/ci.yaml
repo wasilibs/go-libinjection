@@ -33,6 +33,8 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: curioswitch/go-build/.github/actions/setup-go@432d6c326402347b1f6ec5875fbdda8d0cedc54d # v0.10.0
+        with:
+          go-version: ${{ matrix.mode == 'tinygo' && '1.26' || null }}
 
       - name: setup autotools for cgo (mac)
         if: ${{ matrix.mode == 'cgo' && startsWith(matrix.os, 'macos-') }}
