@@ -22,9 +22,9 @@ jobs:
       # Needed for the cgo benchmark mode run by bench-all / wafbench-all.
       - name: setup libinjection for cgo
         run: |-
-          wget https://github.com/libinjection/libinjection/archive/211782219663f889f471650150df12b623c5766e.tar.gz
-          tar -xf 211782219663f889f471650150df12b623c5766e.tar.gz
-          cd libinjection-211782219663f889f471650150df12b623c5766e
+          mkdir libinjection
+          curl -fsSL "https://github.com/libinjection/libinjection/archive/$(tr -d '[:space:]' < "$GITHUB_WORKSPACE/buildtools/wasm/version.txt").tar.gz" | tar -xz --strip-components 1 -C libinjection
+          cd libinjection
           ./autogen.sh
           ./configure
           make
